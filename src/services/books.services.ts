@@ -1,15 +1,13 @@
 import { booksDatabase, generateBookId } from "../database/database";
-import { IBook, TCreateBody, TUpdateBody } from "../interfaces/books.interface";
+import { TBook, TCreateBookData, TUpdateBookData } from "../interfaces/books.interface";
 
 export class BooksService {
-    create(body: TCreateBody){
+    create(data: TCreateBookData){
         const now = new Date();
 
-        const newBook: IBook = {
+        const newBook: TBook = {
             id: generateBookId(),
-            name: body.name,
-            pages: body.pages,
-            category: body.category,
+            ...data,
             createdAt: now,
             updatedAt: now,
         };
@@ -19,40 +17,42 @@ export class BooksService {
         return newBook;
     }
 
-    getMany(search?: string): IBook[]{
+    getMany(search?: string) {
         const filteredBookList = booksDatabase.filter((book) => 
             search ? book.name.toLowerCase().includes(search.toLowerCase()) : true);
 
         return filteredBookList;
     }
 
-    getOne(id: string): IBook{
-        const book = booksDatabase.find((book) => book.id === +id) as IBook;
+    getOne(id: number) {
+        const book = booksDatabase.find((book) => book.id === id);
         
         return book;
     }
 
-    update(id: string, data: TUpdateBody){
-        const currentBook = booksDatabase.find((video) => video.id === +id) as IBook;
+    update(id: number, data: TUpdateBookData){
+        const currentBook = booksDatabase.find((book) => book.id === id) as TBook;
         
         const now = new Date();
 
-        const updateBook: IBook = {
+        const updateBook: TBook = {
             ...currentBook,
             ...data,
             updatedAt: now,
         };
 
-        const index = booksDatabase.findIndex((book) => book.id === +id);
+        const index = booksDatabase.findIndex((book) => book.id === id);
 
         booksDatabase.splice(index, 1, updateBook);
 
         return updateBook;
     }
 
-    delete(id: string): void{
-        const index = booksDatabase.findIndex((book) => book.id === +id);
+    delete(id: number) {
+        const index = booksDatabase.findIndex((book) => book.id === id);
 
         booksDatabase.splice(index, 1);
+
+        return "Book successfully deleted.";
     }
 }

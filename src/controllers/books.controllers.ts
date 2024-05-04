@@ -21,7 +21,7 @@ export class BooksController {
     getOne(req: Request, res: Response): Response{
         const booksService = new BooksService();
 
-        const book = booksService.getOne(req.params.id);
+        const book = booksService.getOne(+req.params.id);
 
         return res.status(200).json(book);
     }
@@ -29,7 +29,7 @@ export class BooksController {
     update(req: Request, res: Response): Response{
         const booksService = new BooksService();
 
-        const book = booksService.update(req.params.id, req.body);
+        const book = booksService.update(+req.params.id, req.body);
 
         return res.status(200).json(book);
     }
@@ -37,7 +37,7 @@ export class BooksController {
     delete(req: Request, res: Response): Response{
         const booksService = new BooksService();
 
-        booksService.delete(req.params.id); 
+        booksService.delete(+req.params.id); 
 
         return res.status(204).json();
     }
